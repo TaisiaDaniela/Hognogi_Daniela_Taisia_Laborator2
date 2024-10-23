@@ -38,7 +38,7 @@ namespace Hognogi_Daniela_Taisia_Laborator2.Pages.Books
             Book = book;
             ViewData["PublisherID"] = new SelectList(_context.Set<Publisher>(), "ID",
 "PublisherName");
-            ViewData["AuthorID"] = new SelectList(_context.Set<Author>(), "ID", "FirstName", "LastName");
+            ViewData["AuthorID"] = new SelectList(_context.Author, "ID", "FullName");
             return Page();
         }
 
