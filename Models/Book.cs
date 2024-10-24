@@ -20,5 +20,7 @@ namespace Hognogi_Daniela_Taisia_Laborator2.Models
 
         public int? AuthorID { get; set; }
         public Author? Author { get; set; } //navigation auhtor 
+
+        public ICollection<BookCategory>? BookCategories { get; set; }
     } 
 }
