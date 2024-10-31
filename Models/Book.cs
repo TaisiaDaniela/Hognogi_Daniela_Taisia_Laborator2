@@ -10,6 +10,8 @@ namespace Hognogi_Daniela_Taisia_Laborator2.Models
 
         [Display(Name = "Book Title")]
         public string Title { get; set; }
+        public int AuthorID { get; set; }
+        public Author? Author { get; set; } //navigation auhtor 
 
         [Column(TypeName = "decimal(6, 2)")]
         public decimal Price { get; set; }
@@ -17,10 +19,6 @@ namespace Hognogi_Daniela_Taisia_Laborator2.Models
         public DateTime PublishingDate { get; set; }
         public int? PublisherID { get; set; }
         public Publisher? Publisher { get; set; } //navigation property 
-
-        public int? AuthorID { get; set; }
-        public Author? Author { get; set; } //navigation auhtor 
-
         public ICollection<BookCategory>? BookCategories { get; set; }
     } 
 }

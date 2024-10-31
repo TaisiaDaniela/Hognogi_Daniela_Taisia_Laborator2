@@ -31,6 +31,7 @@ namespace Hognogi_Daniela_Taisia_Laborator2.Pages.Books
             //se va include Author  conform cu sarcina de la lab 2
             Book = await _context.Book
                .Include(b => b.Publisher)
+                .Include(b => b.Author)
                .Include(b => b.BookCategories).ThenInclude(b => b.Category)
                .AsNoTracking()
                .FirstOrDefaultAsync(m => m.ID == id);
@@ -53,9 +54,9 @@ namespace Hognogi_Daniela_Taisia_Laborator2.Pages.Books
                 x.ID,
                 FullName = x.LastName + " " + x.FirstName
             });
-            ViewData["AuthorID"] = new SelectList(authorList, "ID", "FullName");
+            ViewData["AuthorID"] = new SelectList(_context.Set<Author>(), "ID", "FirstName");
 
-            ViewData["PublisherID"] = new SelectList(_context.Publisher, "ID",
+            ViewData["PublisherID"] = new SelectList(_context.Set<Publisher>(), "ID",
 "PublisherName");
             return Page();
         }
@@ -74,8 +75,9 @@ selectedCategories)
 
             var bookToUpdate = await _context.Book
                 .Include(i => i.Publisher)
+                .Include(i => i.Author)
                 .Include(i => i.BookCategories)
-                    .ThenInclude(i => i.Category)
+                .ThenInclude(i => i.Category)
                 .FirstOrDefaultAsync(s => s.ID == id);
             if (bookToUpdate == null)
             {

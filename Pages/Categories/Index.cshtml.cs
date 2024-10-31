@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Hognogi_Daniela_Taisia_Laborator2.Data;
 using Hognogi_Daniela_Taisia_Laborator2.Models;
+using Hognogi_Daniela_Taisia_Laborator2.Models.ViewModels;
 
 namespace Hognogi_Daniela_Taisia_Laborator2.Pages.Categories
 {
@@ -19,11 +20,34 @@ namespace Hognogi_Daniela_Taisia_Laborator2.Pages.Categories
             _context = context;
         }
 
-        public IList<Category> Category { get;set; } = default!;
+        public IList<Category> Category { get; set; } = default!;
+        public CategoryIndexData CategoryData { get; set; }
+        public int CategoryID { get; set; }
+        public int BookID { get; set; }
 
-        public async Task OnGetAsync()
+        public async Task OnGetAsync(int? id)
         {
-            Category = await _context.Category.ToListAsync();
+            CategoryData = new CategoryIndexData();
+            CategoryData.Categories = await _context.Category
+                .Include(c => c.BookCategories)
+                    .ThenInclude(bc => bc.Book)
+                    .ThenInclude(b => b.Author)
+                .OrderBy(c => c.CategoryName)
+                .ToListAsync();
+
+            if (id != null)
+            {
+                CategoryID = id.Value;
+                var selectedCategory = CategoryData.Categories
+                    .FirstOrDefault(c => c.ID == id.Value);
+                if (selectedCategory != null)
+                {
+                    CategoryData.Books = selectedCategory.BookCategories
+                        .Select(bc => bc.Book)
+                        .ToList();
+                }
+            }
         }
     }
 }
+
