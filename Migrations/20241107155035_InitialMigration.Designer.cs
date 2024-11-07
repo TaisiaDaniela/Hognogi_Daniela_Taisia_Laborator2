@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hognogi_Daniela_Taisia_Laborator2.Migrations
 {
     [DbContext(typeof(Hognogi_Daniela_Taisia_Laborator2Context))]
-    [Migration("20241023175944_BookCategory")]
-    partial class BookCategory
+    [Migration("20241107155035_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -102,6 +102,32 @@ namespace Hognogi_Daniela_Taisia_Laborator2.Migrations
                     b.ToTable("BookCategory");
                 });
 
+            modelBuilder.Entity("Hognogi_Daniela_Taisia_Laborator2.Models.Borrowing", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<int?>("BookID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("MemberID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ReturnDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("BookID");
+
+                    b.HasIndex("MemberID");
+
+                    b.ToTable("Borrowing");
+                });
+
             modelBuilder.Entity("Hognogi_Daniela_Taisia_Laborator2.Models.Category", b =>
                 {
                     b.Property<int>("ID")
@@ -117,6 +143,35 @@ namespace Hognogi_Daniela_Taisia_Laborator2.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Category");
+                });
+
+            modelBuilder.Entity("Hognogi_Daniela_Taisia_Laborator2.Models.Member", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
+
+                    b.Property<string>("Adress")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Member");
                 });
 
             modelBuilder.Entity("Hognogi_Daniela_Taisia_Laborator2.Models.Publisher", b =>
@@ -170,6 +225,21 @@ namespace Hognogi_Daniela_Taisia_Laborator2.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("Hognogi_Daniela_Taisia_Laborator2.Models.Borrowing", b =>
+                {
+                    b.HasOne("Hognogi_Daniela_Taisia_Laborator2.Models.Book", "Book")
+                        .WithMany("Borrowings")
+                        .HasForeignKey("BookID");
+
+                    b.HasOne("Hognogi_Daniela_Taisia_Laborator2.Models.Member", "Member")
+                        .WithMany("Borrowings")
+                        .HasForeignKey("MemberID");
+
+                    b.Navigation("Book");
+
+                    b.Navigation("Member");
+                });
+
             modelBuilder.Entity("Hognogi_Daniela_Taisia_Laborator2.Models.Author", b =>
                 {
                     b.Navigation("Books");
@@ -178,11 +248,18 @@ namespace Hognogi_Daniela_Taisia_Laborator2.Migrations
             modelBuilder.Entity("Hognogi_Daniela_Taisia_Laborator2.Models.Book", b =>
                 {
                     b.Navigation("BookCategories");
+
+                    b.Navigation("Borrowings");
                 });
 
             modelBuilder.Entity("Hognogi_Daniela_Taisia_Laborator2.Models.Category", b =>
                 {
                     b.Navigation("BookCategories");
+                });
+
+            modelBuilder.Entity("Hognogi_Daniela_Taisia_Laborator2.Models.Member", b =>
+                {
+                    b.Navigation("Borrowings");
                 });
 
             modelBuilder.Entity("Hognogi_Daniela_Taisia_Laborator2.Models.Publisher", b =>
