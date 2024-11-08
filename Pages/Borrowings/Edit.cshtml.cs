@@ -30,14 +30,29 @@ namespace Hognogi_Daniela_Taisia_Laborator2.Pages.Borrowings
                 return NotFound();
             }
 
-            var borrowing =  await _context.Borrowing.FirstOrDefaultAsync(m => m.ID == id);
+            var borrowing =  await _context.Borrowing
+                .Include(b => b.Book)
+                .ThenInclude(b => b.Author)
+                 .Include(b => b.Member)
+                .FirstOrDefaultAsync(m => m.ID == id);
+
             if (borrowing == null)
             {
                 return NotFound();
             }
             Borrowing = borrowing;
-           ViewData["BookID"] = new SelectList(_context.Book, "ID", "ID");
-           ViewData["MemberID"] = new SelectList(_context.Member, "ID", "ID");
+        var bookList = _context.Book
+            .Include(b => b.Author)
+            .Select(x => new
+            {
+                x.ID,
+                BookFullName = x.Title + " - " + x.Author.LastName + " - " + x.Author.FirstName
+            });
+
+            ViewData["BookID"] = new SelectList(bookList, "ID", "BookFullName");
+
+            ViewData["MemberID"] = new SelectList(_context.Member, "ID", "FullName");
+
             return Page();
         }
 
