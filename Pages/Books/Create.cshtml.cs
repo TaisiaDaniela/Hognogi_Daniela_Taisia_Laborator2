@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Hognogi_Daniela_Taisia_Laborator2.Data;
 using Hognogi_Daniela_Taisia_Laborator2.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Hognogi_Daniela_Taisia_Laborator2.Pages.Books
 {
+    [Authorize(Roles = "Admin")]
     public class CreateModel : BookCategoriesPageModel 
     {
         private readonly Hognogi_Daniela_Taisia_Laborator2.Data.Hognogi_Daniela_Taisia_Laborator2Context _context;
